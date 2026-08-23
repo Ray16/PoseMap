@@ -1,0 +1,19 @@
+PoseMap all-systems demonstration  (systems dir: /nfs/lambda_stor_01/homes/rzhu/PMD/NAC_SN2/systems)
+
+system      subs  mapped  sym  pose-rate  reactive-atom check
+-------------------------------------------------------------
+caffeine       6       6    0      25/25  
+est2           6       6    6      25/25  ester carbonyl C (Ser attack): C @[-6.4,-9.4,-2.1]
+galk           6       6    0      25/25  
+gst           11      11   11      25/25  SNAr ipso-C (C-Cl): C @[-2.6,11.6,2.6]
+hheg           6       6    6      25/25  
+hld            5       5    0      25/25  halo-carbon (SN2 center): C @[-2.7,-5.8,-6.5]
+kemp           5       5    5      25/25  
+ldex           6       6    6      25/25  halo-carbon (SN2 center): C @[-0.2,0.7,-2.8]
+oye            8       8    4      25/25  hydride-acceptor beta-C: C @[-1.7,-0.3,-7.4]
+pkinase        5       5    0      25/25  
+smomt         17      17    3      25/25  
+sult           8       8    0      25/25  
+tpmt           8       8    0      25/25  thiopurine S (methyl acceptor): S @[-1.8,1.7,-8.5]
+-------------------------------------------------------------
+TOTAL         97      97   substrates mapped (100% of representative poses)

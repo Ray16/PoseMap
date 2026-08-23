@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "PoseMap"
+version = "0.1.0"
+description = "PoseMap — recover chemically-meaningful atoms from a docking/co-folding pose by graph isomorphism to a SMILES template."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "posemap contributors" }]
+keywords = ["cheminformatics", "docking", "cofolding", "boltz", "alphafold",
+            "graph-isomorphism", "smarts", "structural-biology", "rdkit"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "numpy>=1.20",
+    "networkx>=2.6",
+    "rdkit>=2021.9",
+]
+
+[project.optional-dependencies]
+cif = ["gemmi>=0.6"]          # optional, more robust mmCIF parsing
+test = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/OWNER/PoseMap"
+Issues = "https://github.com/OWNER/PoseMap/issues"
+
+[project.scripts]
+posemap = "posemap.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
