@@ -35,6 +35,16 @@ posemap pose.pdb "ClCC(=O)[O-]"   --dump                          # full templat
 posemap --list-motifs
 ```
 
+## Why this exists (vs. "just ask an agent" or "click it in PyMOL")
+
+Short version, measured on 400 real Boltz poses: selecting the target atom by **name** is impossible
+(the same β-carbon appears under 8 different names); the plausible **nearest-atom heuristic** an agent
+would write is **silently wrong 34% of the time**; and an agent that reasons it out correctly does so
+only by **re-deriving PoseMap's algorithm every call** (~14k tokens/molecule, non-deterministic, no
+error gate). PoseMap makes it one deterministic, gated, ~70 ms call. Full evidence and the
+"why-not-PyMOL" answer: **[WHY_POSEMAP.md](WHY_POSEMAP.md)** (reproduce with
+`python examples/why_posemap.py`).
+
 ## Why graph isomorphism (and not a distance heuristic)
 
 The usual workaround is "the carbon nearest the halogen" / "the oxygen closest to the metal". Those

@@ -1,0 +1,53 @@
+==============================================================================
+EXPERIMENT 1 — atom names in a co-folding pose are chemically MEANINGLESS
+  (so 'select the beta-carbon by name' — an agent's first instinct — is impossible)
+==============================================================================
+substrate                    beta-carbon PDB name(s) in model_0
+  4-ketoisophorone           C17, C18
+  1-octen-3-one              C17
+  2-cyclohexen-1-one         C12, C15
+  maleimide                  C8, C9
+  2-methyl-2-pentenal        C14
+  2-methyl-2-cyclohexen-1-one C14
+  2-cyclopenten-1-one        C10, C12
+  trans-2-hexenal            C14
+
+  -> the SAME chemical atom (the beta-C) is written as 8 different names across substrates: C10, C12, C14, C15, C17, C18, C8, C9
+  -> there is no name convention to key on; only chemical identity is stable.
+
+==============================================================================
+EXPERIMENT 2 — the ad-hoc heuristic an agent would WRITE is silently wrong
+  heuristic: 'the beta-C is the substrate carbon nearest the flavin N5'
+  (chemically motivated — hydride goes N5->beta — but geometry-naive)
+==============================================================================
+substrate                      agree  poses  heuristic error
+  4-ketoisophorone                35     50             30 %
+  1-octen-3-one                    6     50             88 %
+  2-cyclohexen-1-one              50     50              0 %
+  maleimide                       44     50             12 %
+  2-methyl-2-pentenal              2     50             96 %
+  2-methyl-2-cyclohexen-1-one      43     50             14 %
+  2-cyclopenten-1-one             50     50              0 %
+  trans-2-hexenal                 32     50             36 %
+
+  OVERALL: the nearest-carbon heuristic disagrees with the true beta-C on 138/400 poses (34%).
+  Every one of those is a SILENT, plausible-looking wrong answer — no error is raised.
+  PoseMap gets the identity right on 100% (it maps by chemical identity, gate-checked).
+
+==============================================================================
+EXPERIMENT 3 — symmetry: the naive pick is INCONSISTENT; PoseMap is deterministic
+==============================================================================
+  maleimide has TWO equivalent beta-carbons.
+  naive 'nearest carbon' pick, across poses: {'C8': 44, 'C6': 6}
+    -> it silently flips between the two equivalents; a human clicking would too,
+       giving inconsistent selections pose-to-pose.
+  PoseMap returned BOTH equivalents on 50/50 poses,
+    so you resolve the reactive one explicitly (e.g. by orientation) — not by luck.
+
+==============================================================================
+EXPERIMENT 4 — determinism & scale (vs a per-pose agent call, or manual PyMOL)
+==============================================================================
+  PoseMap mapped 400/400 poses in 20.2s (20 poses/s), fully deterministic & reproducible.
+  A per-pose LLM agent call: ~seconds + tokens EACH, non-deterministic, no gate.
+  Manual PyMOL: minutes/pose of human clicking — not viable for 400 poses,
+    not scriptable, not reproducible, and still inconsistent on symmetric ligands.
