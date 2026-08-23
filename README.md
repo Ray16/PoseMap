@@ -85,10 +85,41 @@ recovered correctly. See `examples/EXAMPLE_OUTPUT.txt`.
 ## Install
 
 ```bash
+pip install git+https://github.com/Ray16/PoseMap.git   # from GitHub
+# or, from a clone:
 pip install -e .          # needs numpy, networkx, rdkit
 pip install -e '.[cif]'   # add gemmi for heavier mmCIF work (built-in reader covers common files)
 pip install -e '.[test]' && pytest
 ```
+
+Then try it with zero setup: `python examples/quickstart.py` (generates a scrambled pose and
+recovers atoms from it), or run it on a real project: `python examples/demo_nac_systems.py`.
+
+## FAQ / gotchas
+
+**How do I say *which* atom I want?** Tag it in the SMARTS with map number `:1`:
+`"[C:1]=[C][CX3]=[O]"` returns the β-carbon; `"[CX3:1]=[O]"` returns the carbonyl carbon.
+The `:1` is the target; everything else is context that locates it. (Use `--mapnum N` /
+`mapnum=N` for a different number.) No `:1` in the SMARTS raises a clear error.
+
+**Why do I get a *list* back, not one atom?** `atoms_by_smarts`/`atom` return a **list** of
+`MappedAtom` because (a) a SMARTS can match more than once and (b) symmetric molecules have
+several chemically-equivalent copies of the target (maleimide's two β-carbons, benzene's
+carbons). Take `hits[0]` for a unique atom; for a symmetric set, pick the reactive orientation
+yourself, e.g. `min(hits, key=lambda a: dist(a.xyz, catalytic_xyz))`.
+
+**Empty list vs. `matched is False` — what's the difference?**
+`res.matched is False` → the template did **not** map onto any ligand (wrong/distorted pose,
+or no matching ligand present) — check `res.reason`. `res.matched is True` but
+`atoms_by_smarts(...) == []` → the ligand mapped fine, your **SMARTS** just didn't match it.
+
+**It didn't find my ligand.** Give it a hint: `mapper.map(struct, chain="C")` or
+`resname=...`. Auto-detection matches a ligand whose element composition equals the template's;
+if a pose is distorted enough to change perceived bonds, raise `bond_tol` (e.g. `from_smiles(smi,
+bond_tol=0.6)`) or supply exact bonds with `PoseMapper.from_mol(rdkit_mol)`.
+
+**Which atoms can it find?** Substrate/ligand atoms. Protein-residue and standard-cofactor atoms
+keep real names — select those directly (e.g. a catalytic Asp `OD1/OD2`, FMN `N5`).
 
 ## Scope & limits
 
